@@ -5,10 +5,7 @@ import edu.bootcamp_sb.service_market.dto.BookingDto;
 import edu.bootcamp_sb.service_market.dto.ClientDto;
 import edu.bootcamp_sb.service_market.dto.reponse.BookingResponseDto;
 import edu.bootcamp_sb.service_market.dto.request.BookingRequestDto;
-import edu.bootcamp_sb.service_market.entity.BookingEntity;
-import edu.bootcamp_sb.service_market.entity.ClientEntity;
-import edu.bootcamp_sb.service_market.entity.ProviderEntity;
-import edu.bootcamp_sb.service_market.entity.ServiceGigEntity;
+import edu.bootcamp_sb.service_market.entity.*;
 import edu.bootcamp_sb.service_market.exception.booking_exception.BookingHasNotFoundException;
 import edu.bootcamp_sb.service_market.exception.client_exceptions.ClientHasBeenNotFoundException;
 import edu.bootcamp_sb.service_market.exception.provider_exception.ProviderGigHasNotFound;
@@ -16,6 +13,7 @@ import edu.bootcamp_sb.service_market.exception.provider_exception.ProviderHasBe
 import edu.bootcamp_sb.service_market.repository.*;
 import edu.bootcamp_sb.service_market.service.BookingService;
 import edu.bootcamp_sb.service_market.service.EmailService;
+import edu.bootcamp_sb.service_market.sheard.ProviderAvailabilityStatus;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -27,6 +25,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZoneOffset;
 import java.util.*;
 
 import static edu.bootcamp_sb.service_market.service.impl.ClientServiceImpl.clientEntityToClientResponseDto;
@@ -50,6 +49,8 @@ public class BookingServiceImpl implements BookingService {
     private final EmailService emailService;
 
     private final ObjectMapper mapper;
+
+    private final ProviderCalendarRepository providerCalendarRepository;
 
 
 
@@ -139,6 +140,13 @@ public class BookingServiceImpl implements BookingService {
 
         BookingEntity saved = bookingRepository.save(bookingEntity);
 
+        ProviderCalendarEntity calendarEntity = new ProviderCalendarEntity();
+        calendarEntity.setProvider(provider);
+        calendarEntity.setStatus(ProviderAvailabilityStatus.BUSY);
+        calendarEntity.setCalendarDate(bookingDto.getStartingDate().atStartOfDay(ZoneOffset.UTC).toInstant());
+
+        providerCalendarRepository.save(calendarEntity);
+
         HashMap<String, Object> emailVariables = new HashMap<>();
         emailVariables.put("username",saved.getClient().getUsername());
         emailVariables.put("providerUsername",saved.getServiceProvider().getUserName());
@@ -202,6 +210,9 @@ public class BookingServiceImpl implements BookingService {
 
 
         bookingRepository.save(bookingEntity);
+
+        providerCalendarRepository.deleteByProviderIdAndCalendarDate(bookingEntity.getServiceProvider().getId(),
+                bookingEntity.getStartingDate().atStartOfDay(ZoneOffset.UTC).toInstant());
 
         return ResponseEntity.ok(Map.of(
                 "cancellation", "successfully canceled booking called" + id));
