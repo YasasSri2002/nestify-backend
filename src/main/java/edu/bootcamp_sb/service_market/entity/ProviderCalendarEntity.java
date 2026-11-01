@@ -26,6 +26,8 @@ public class ProviderCalendarEntity {
 
     private LocalDate calendarDate;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private ProviderAvailabilityStatus status;
 
 
