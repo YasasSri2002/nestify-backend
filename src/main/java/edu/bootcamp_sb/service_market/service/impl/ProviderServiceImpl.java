@@ -166,10 +166,6 @@ public class ProviderServiceImpl implements ProviderService {
 
         ProviderEntity save = providerRepository.save(providerEntity);
 
-        ProviderCalendarEntity providerCalendarEntity = new ProviderCalendarEntity();
-        providerCalendarEntity.setProvider(save);
-
-        calendarRepository.save(providerCalendarEntity);
 
         return ResponseEntity.ok().body(convertProviderEntityToProviderDto(save));
 
