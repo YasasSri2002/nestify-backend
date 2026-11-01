@@ -6,12 +6,11 @@ import edu.bootcamp_sb.service_market.dto.ProviderDto;
 import edu.bootcamp_sb.service_market.dto.reponse.ProviderCategoryResponseDto;
 import edu.bootcamp_sb.service_market.dto.reponse.ProviderResponseDto;
 import edu.bootcamp_sb.service_market.dto.request.ProviderRegistrationDto;
-import edu.bootcamp_sb.service_market.dto.request.ProviderRequestDto;
 import edu.bootcamp_sb.service_market.dto.request.ProviderSelectCategoriesDto;
-import edu.bootcamp_sb.service_market.entity.ProviderEntity;
 import org.springframework.http.ResponseEntity;
 
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -42,6 +41,8 @@ public interface ProviderService {
     ResponseEntity<Map<String, String>> selectACategory(ProviderSelectCategoriesDto selectCategoriesDto);
 
     ResponseEntity<Map<String,String>> getProviderCount();
+
+    ResponseEntity<Map<String,String>> addDayOff(Instant day, String userId);
 
 
 

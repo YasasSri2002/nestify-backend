@@ -13,8 +13,14 @@ import edu.bootcamp_sb.service_market.service.ProviderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -96,5 +102,11 @@ public class ProviderController {
         return providerService.getProviderCount();
     }
 
+    @PutMapping("/add-day-off")
+    @PreAuthorize("hasRole('provider')")
+    public ResponseEntity<Map<String, String>> addDayOff(@RequestParam String day, @AuthenticationPrincipal Jwt token){
+        Instant date = LocalDate.parse(day).atStartOfDay(ZoneOffset.UTC).toInstant();
+        return providerService.addDayOff(date, token.getSubject());
+    }
 
 }

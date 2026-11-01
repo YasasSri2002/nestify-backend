@@ -16,6 +16,7 @@ import edu.bootcamp_sb.service_market.repository.CategoryRepository;
 import edu.bootcamp_sb.service_market.repository.ProviderCalendarRepository;
 import edu.bootcamp_sb.service_market.repository.ProviderRepository;
 import edu.bootcamp_sb.service_market.service.ProviderService;
+import edu.bootcamp_sb.service_market.sheard.ProviderAvailabilityStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -28,6 +29,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.util.*;
 
 import static edu.bootcamp_sb.service_market.service.impl.BookingServiceImpl.bookingEntityToBookingResponseDto;
@@ -427,6 +429,29 @@ public class ProviderServiceImpl implements ProviderService {
         return ResponseEntity.ok(
                 Map.of("Provider count", String.valueOf(count))
         );
+    }
+
+    @Override
+    public ResponseEntity<Map<String,String>> addDayOff(Instant day, String userId) {
+
+        ProviderEntity providerEntity = providerRepository.findById(UUID.fromString(userId))
+                .orElseThrow(() -> new IllegalStateException("user not found"));
+
+        if(day.isBefore(Instant.now())){
+            throw new IllegalStateException("Day can't be in past");
+        }
+
+        ProviderCalendarEntity calendarEntity = new ProviderCalendarEntity();
+        calendarEntity.setProvider(providerEntity);
+        calendarEntity.setCalendarDate(day);
+        calendarEntity.setStatus(ProviderAvailabilityStatus.UNAVAILABLE);
+
+        calendarRepository.save(calendarEntity);
+
+        HashMap<String, String> response = new HashMap<>();
+        response.put("SUCCESS","Day off has been added");
+
+        return ResponseEntity.ok(response);
     }
 
 
