@@ -3,6 +3,7 @@ package edu.bootcamp_sb.service_market.service;
 import edu.bootcamp_sb.service_market.dto.ProviderDto;
 
 
+import edu.bootcamp_sb.service_market.dto.reponse.ProviderCalendarResponseDto;
 import edu.bootcamp_sb.service_market.dto.reponse.ProviderCategoryResponseDto;
 import edu.bootcamp_sb.service_market.dto.reponse.ProviderResponseDto;
 import edu.bootcamp_sb.service_market.dto.request.ProviderRegistrationDto;
@@ -44,6 +45,8 @@ public interface ProviderService {
     ResponseEntity<Map<String,String>> getProviderCount();
 
     ResponseEntity<Map<String,String>> addDayOff(LocalDate day, String userId);
+
+    ResponseEntity<List<ProviderCalendarResponseDto>> getProviderCalendar(UUID userId);
 
 
 

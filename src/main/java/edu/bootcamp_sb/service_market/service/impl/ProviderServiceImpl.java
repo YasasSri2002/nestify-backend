@@ -451,6 +451,21 @@ public class ProviderServiceImpl implements ProviderService {
         return ResponseEntity.ok(response);
     }
 
+    @Override
+    public ResponseEntity<List<ProviderCalendarResponseDto>> getProviderCalendar(UUID userId) {
+        List<ProviderCalendarEntity> allByProviderId = calendarRepository.findAllByProviderId(userId);
+
+        ArrayList<ProviderCalendarResponseDto> providerCalendarResponseDtos = new ArrayList<>();
+
+        allByProviderId.forEach(providerCalendarEntity -> providerCalendarResponseDtos.add(
+                new ProviderCalendarResponseDto(
+                        providerCalendarEntity.getCalendarDate(),
+                        providerCalendarEntity.getStatus().toString()
+                )));
+
+        return ResponseEntity.ok(providerCalendarResponseDtos);
+    }
+
 
     public static Double avgRatingOfAProvider(ProviderEntity provider) {
 

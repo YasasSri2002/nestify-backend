@@ -3,6 +3,7 @@ package edu.bootcamp_sb.service_market.controller;
 import edu.bootcamp_sb.service_market.dto.ProviderDto;
 
 
+import edu.bootcamp_sb.service_market.dto.reponse.ProviderCalendarResponseDto;
 import edu.bootcamp_sb.service_market.dto.reponse.ProviderCategoryResponseDto;
 import edu.bootcamp_sb.service_market.dto.reponse.ProviderResponseDto;
 import edu.bootcamp_sb.service_market.dto.request.ProviderRegistrationDto;
@@ -107,6 +108,11 @@ public class ProviderController {
     public ResponseEntity<Map<String, String>> addDayOff(@RequestParam String day, @AuthenticationPrincipal Jwt token){
         LocalDate date = LocalDate.parse(day);
         return providerService.addDayOff(date, token.getSubject());
+    }
+
+    @GetMapping("/get-calendar")
+    public ResponseEntity<List<ProviderCalendarResponseDto>>getCalendar(@RequestParam String providerId){
+        return providerService.getProviderCalendar(UUID.fromString(providerId));
     }
 
 }
