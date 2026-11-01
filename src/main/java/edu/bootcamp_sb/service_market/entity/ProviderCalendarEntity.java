@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.Map;
 import java.util.Set;
 
@@ -23,7 +24,7 @@ public class ProviderCalendarEntity {
     @JoinColumn(name = "provider_id", nullable = false)
     private ProviderEntity provider;
 
-    private Instant calendarDate;
+    private LocalDate calendarDate;
 
     private ProviderAvailabilityStatus status;
 

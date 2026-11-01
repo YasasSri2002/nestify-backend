@@ -105,7 +105,7 @@ public class ProviderController {
     @PutMapping("/add-day-off")
     @PreAuthorize("hasRole('provider')")
     public ResponseEntity<Map<String, String>> addDayOff(@RequestParam String day, @AuthenticationPrincipal Jwt token){
-        Instant date = LocalDate.parse(day).atStartOfDay(ZoneOffset.UTC).toInstant();
+        LocalDate date = LocalDate.parse(day);
         return providerService.addDayOff(date, token.getSubject());
     }
 

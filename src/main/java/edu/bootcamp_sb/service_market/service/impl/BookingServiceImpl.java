@@ -143,7 +143,7 @@ public class BookingServiceImpl implements BookingService {
         ProviderCalendarEntity calendarEntity = new ProviderCalendarEntity();
         calendarEntity.setProvider(provider);
         calendarEntity.setStatus(ProviderAvailabilityStatus.BUSY);
-        calendarEntity.setCalendarDate(bookingDto.getStartingDate().atStartOfDay(ZoneOffset.UTC).toInstant());
+        calendarEntity.setCalendarDate(bookingDto.getStartingDate());
 
         providerCalendarRepository.save(calendarEntity);
 

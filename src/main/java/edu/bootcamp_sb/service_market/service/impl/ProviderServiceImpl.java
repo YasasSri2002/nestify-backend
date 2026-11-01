@@ -30,6 +30,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.*;
 
 import static edu.bootcamp_sb.service_market.service.impl.BookingServiceImpl.bookingEntityToBookingResponseDto;
@@ -428,12 +429,12 @@ public class ProviderServiceImpl implements ProviderService {
     }
 
     @Override
-    public ResponseEntity<Map<String,String>> addDayOff(Instant day, String userId) {
+    public ResponseEntity<Map<String,String>> addDayOff(LocalDate day, String userId) {
 
         ProviderEntity providerEntity = providerRepository.findById(UUID.fromString(userId))
                 .orElseThrow(() -> new IllegalStateException("user not found"));
 
-        if(day.isBefore(Instant.now())){
+        if(day.isBefore(LocalDate.now())){
             throw new IllegalStateException("Day can't be in past");
         }
 

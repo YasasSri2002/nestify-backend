@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -42,7 +43,7 @@ public interface ProviderService {
 
     ResponseEntity<Map<String,String>> getProviderCount();
 
-    ResponseEntity<Map<String,String>> addDayOff(Instant day, String userId);
+    ResponseEntity<Map<String,String>> addDayOff(LocalDate day, String userId);
 
 
 
